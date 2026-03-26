@@ -1,65 +1,98 @@
-import Image from "next/image";
+"use client";
+import {
+  Box,
+  Container,
+  Grid,
+  GridItem,
+  Heading,
+  SimpleGrid,
+  Text,
+} from "@chakra-ui/react";
+import Carrito from "./_components/Carrito";
+import ProductCard, { type Product } from "./_components/ProductCard";
+import { useState } from "react";
+
+const fakeProducts: Product[] = [
+  {
+    imageUrl:
+      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80",
+    imageAlt: "Zapatillas deportivas rojas",
+    rating: 4.8,
+    reviewCount: 124,
+    title: "Zapatillas Urban Run",
+    formattedPrice: "$89.90",
+  },
+  {
+    imageUrl:
+      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=80",
+    imageAlt: "Reloj minimalista negro",
+    rating: 4.6,
+    reviewCount: 78,
+    title: "Reloj Minimal Black",
+    formattedPrice: "$129.00",
+  },
+  {
+    imageUrl:
+      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=80",
+    imageAlt: "Audifonos inalambricos",
+    rating: 4.9,
+    reviewCount: 203,
+    title: "Audifonos Wave Pro",
+    formattedPrice: "$149.50",
+  },
+  {
+    imageUrl:
+      "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=900&q=80",
+    imageAlt: "Mochila gris para laptop",
+    rating: 4.7,
+    reviewCount: 91,
+    title: "Mochila City Pack",
+    formattedPrice: "$64.99",
+  },
+];
 
 export default function Home() {
+  const [carrito, setCarrito] = useState<Product[]>([]);
+
+  const addToCarrito = (item: Product) => {
+    setCarrito((currentItems: Product[]) => [...currentItems, item]);
+  };
+
+  const removeCarrito = (_product: Product, index: number) => {
+    setCarrito((currentItems: Product[]) =>
+      currentItems.filter((_, currentIndex) => currentIndex !== index),
+    );
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <Box bg="gray.50" minH="100dvh" py={{ base: 10, md: 16 }}>
+      <Container maxW="7xl">
+        <Grid templateColumns={{ base: "1fr", xl: "2fr 1fr" }} gap={8}>
+          <GridItem>
+            <Heading size="2xl" color="gray.900">
+              Productos destacados
+            </Heading>
+            <Text mt={3} maxW="2xl" color="gray.600" fontSize="lg">
+              Esta lista usa datos falsos definidos localmente en una constante
+              y renderiza una tarjeta por cada producto.
+            </Text>
+
+            <SimpleGrid columns={{ base: 1, md: 2 }} gap={6} mt={10}>
+              {fakeProducts.map((product) => (
+                <ProductCard
+                  key={`${product.title}-${product.reviewCount}`}
+                  {...product}
+                  addToCarrito={() => addToCarrito(product)}
+                />
+              ))}
+            </SimpleGrid>
+          </GridItem>
+
+          <GridItem>
+            <Carrito productos={carrito} onRemove={removeCarrito} />
+          </GridItem>
+        </Grid>
+      </Container>
+    </Box>
   );
 }
