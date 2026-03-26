@@ -1,13 +1,5 @@
 import { Box, Button, HStack, Image, Text } from "@chakra-ui/react";
-
-export type Product = {
-  imageUrl: string;
-  imageAlt: string;
-  rating: number;
-  reviewCount: number;
-  title: string;
-  formattedPrice: string;
-};
+import { type Product } from "../_lib/product";
 
 export type ProductCardProps = Product & {
   addToCarrito: () => void;

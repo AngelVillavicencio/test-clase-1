@@ -7,7 +7,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { type Product } from "./ProductCard";
+import { type Product } from "../_lib/product";
 
 type CarritoProps = {
   productos: Product[];
