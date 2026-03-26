@@ -77,10 +77,6 @@ export default function Home() {
               y renderiza una tarjeta por cada producto.
             </Text>
           </GridItem>
-
-          <GridItem>
-            <Carrito productos={carrito} onRemove={removeCarrito} />
-          </GridItem>
         </Grid>
       </Container>
     </Box>
