@@ -76,20 +76,6 @@ export default function Home() {
               Esta lista usa datos falsos definidos localmente en una constante
               y renderiza una tarjeta por cada producto.
             </Text>
-
-            <SimpleGrid columns={{ base: 1, md: 2 }} gap={6} mt={10}>
-              {fakeProducts.map((product) => (
-                <ProductCard
-                  key={`${product.title}-${product.reviewCount}`}
-                  {...product}
-                  addToCarrito={() => addToCarrito(product)}
-                />
-              ))}
-            </SimpleGrid>
-          </GridItem>
-
-          <GridItem>
-            <Carrito productos={carrito} onRemove={removeCarrito} />
           </GridItem>
         </Grid>
       </Container>
