@@ -86,15 +86,6 @@ export default function Home() {
                 />
               ))}
             </SimpleGrid>
-            <SimpleGrid columns={{ base: 1, md: 2 }} gap={6} mt={10}>
-              {fakeProducts.map((product) => (
-                <ProductCard
-                  key={`${product.title}-${product.reviewCount}`}
-                  {...product}
-                  addToCarrito={() => addToCarrito(product)}
-                />
-              ))}
-            </SimpleGrid>
           </GridItem>
 
           <GridItem>
