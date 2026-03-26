@@ -8,9 +8,10 @@ import {
   SimpleGrid,
   Text,
 } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import Carrito from "./_components/Carrito";
-import ProductCard, { type Product } from "./_components/ProductCard";
-import { useState } from "react";
+import ProductCard from "./_components/ProductCard";
+import { type Product } from "./_lib/product";
 
 const fakeProducts: Product[] = [
   {
@@ -54,14 +55,38 @@ const fakeProducts: Product[] = [
 export default function Home() {
   const [carrito, setCarrito] = useState<Product[]>([]);
 
-  const addToCarrito = (item: Product) => {
-    setCarrito((currentItems: Product[]) => [...currentItems, item]);
+  useEffect(() => {
+    const loadCart = async () => {
+      const response = await fetch("/api/cart", { cache: "no-store" });
+      const data = (await response.json()) as { items: Product[] };
+      setCarrito(data.items);
+    };
+
+    void loadCart();
+  }, []);
+
+  const addToCarrito = async (item: Product) => {
+    const response = await fetch("/api/cart", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(item),
+    });
+    const data = (await response.json()) as { items: Product[] };
+    setCarrito(data.items);
   };
 
-  const removeCarrito = (_product: Product, index: number) => {
-    setCarrito((currentItems: Product[]) =>
-      currentItems.filter((_, currentIndex) => currentIndex !== index),
-    );
+  const removeCarrito = async (_product: Product, index: number) => {
+    const response = await fetch("/api/cart", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ index }),
+    });
+    const data = (await response.json()) as { items: Product[] };
+    setCarrito(data.items);
   };
 
   return (
@@ -76,29 +101,6 @@ export default function Home() {
               Esta lista usa datos falsos definidos localmente en una constante
               y renderiza una tarjeta por cada producto.
             </Text>
-
-            <SimpleGrid columns={{ base: 1, md: 2 }} gap={6} mt={10}>
-              {fakeProducts.map((product) => (
-                <ProductCard
-                  key={`${product.title}-${product.reviewCount}`}
-                  {...product}
-                  addToCarrito={() => addToCarrito(product)}
-                />
-              ))}
-            </SimpleGrid>
-            <SimpleGrid columns={{ base: 1, md: 2 }} gap={6} mt={10}>
-              {fakeProducts.map((product) => (
-                <ProductCard
-                  key={`${product.title}-${product.reviewCount}`}
-                  {...product}
-                  addToCarrito={() => addToCarrito(product)}
-                />
-              ))}
-            </SimpleGrid>
-          </GridItem>
-
-          <GridItem>
-            <Carrito productos={carrito} onRemove={removeCarrito} />
           </GridItem>
         </Grid>
       </Container>
